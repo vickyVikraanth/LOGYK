@@ -5,9 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -22,6 +20,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.baharudin.webviews.ui.theme.WebviewsTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -55,24 +54,30 @@ fun WebviewScreen(){
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         backEnable = view!!.canGoBack()
                     }
-                    /*override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                        if (Uri.parse(url).host == "https://t.me/") {
+
+                    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                        if (url.startsWith("https://t.me/")) {
                             // Open internal links within the WebView
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             view.context.startActivity(intent)
                             return true
                         }
-                        return true
-                    }*/
+                        return false
+                    }
 
                 }
                 settings.allowUniversalAccessFromFileURLs = true
                 settings.allowFileAccessFromFileURLs = true
+                settings.allowContentAccess = true;
+                settings.allowFileAccess = true;
+
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+
                 loadUrl("https://logykinfotech.com/login.php")
                 webView = this
+
             }
         }, update = {
             webView = it
