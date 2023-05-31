@@ -5,8 +5,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.ValueCallback
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -104,21 +108,29 @@ fun WebviewScreen(customListioner: CustomWebChromeClient.CustomListener) {
                     }
 
                 }
+                settings.setMediaPlaybackRequiresUserGesture(false);
                 settings.allowUniversalAccessFromFileURLs = true
                 settings.allowFileAccessFromFileURLs = true
-                settings.allowContentAccess = true;
-                settings.allowFileAccess = true;
+                settings.allowContentAccess = true
+                settings.databaseEnabled = true
+                settings.allowFileAccess = true
                 settings.javaScriptEnabled = true
+                getSettings().setPluginState(WebSettings.PluginState.ON);
+
                 settings.domStorageEnabled = true
                 webChromeClient = CustomWebChromeClient( customListioner)
-                settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                settings.cacheMode = WebSettings.LOAD_DEFAULT;
 
-                loadUrl("https://logykinfotech.com/login.php")
+               loadUrl("https://logykinfotech.com/login.php")
+               // loadData("", "text/html", "utf-8");
+
                 webView = this
 
             }
         }, update = {
             webView = it
+            webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
         })
 
     BackHandler(enabled = backEnable) {
